@@ -1,6 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 
     package="com.example.delia.miniweather">
+    <uses-permission android:name="android.permisson.ACCESS_NETWORK_STATE"/>
 
     <application
         android:allowBackup="true"
