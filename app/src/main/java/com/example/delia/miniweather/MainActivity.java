@@ -18,7 +18,7 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.weather_info);
 
-
+        //检查网络连接情况
         if(NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE)
         {
             Log.d("myWeather" , "网络OK");
