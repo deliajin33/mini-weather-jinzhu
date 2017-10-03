@@ -15,7 +15,10 @@ public class NetUtil
 
     public static int getNetworkState(Context context)
     {
+        //ConnectivityManager主要用于查看网络状态和管理网络连接相关的操作
         ConnectivityManager connManager = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        //NetworkInfo对象包含网络连接的所有信息
         NetworkInfo networkInfo = connManager.getActiveNetworkInfo();
 
         if(networkInfo == null)
