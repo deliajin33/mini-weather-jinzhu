@@ -1,6 +1,7 @@
 package com.example.delia.miniweather;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,10 +39,14 @@ public class MainActivity extends Activity implements View.OnClickListener
     //各式各样的组件
     private ImageView mUpdateBtn;
 
+    private ImageView mCitySelect;
+
+
     private TextView cityTv , timeTv , humidityTv , weekTv , pmDataTv , pmQualityTv , temperatureTv , climateTv , windTv , city_name_Tv;
 
     private ImageView weatherImg , pmImg;
 
+    //Handler来根据接收的消息，处理UI更新。Thread线程发出Handler消息，通知更新UI
     private Handler mHandler = new Handler()
     {
         public void handleMessage(android.os.Message msg)
@@ -83,6 +88,12 @@ public class MainActivity extends Activity implements View.OnClickListener
             Log.d("myWeather" , "网络挂了");
             Toast.makeText(MainActivity.this , "网络挂了" , Toast.LENGTH_LONG).show();
         }
+
+        //选择城市按钮
+        mCitySelect = (ImageView)findViewById(R.id.title_city_manager);
+        mCitySelect.setOnClickListener(this);
+
+
 
         //调用方法初始化控件
         initView();
@@ -126,6 +137,19 @@ public class MainActivity extends Activity implements View.OnClickListener
     @Override
     public void onClick(View view)
     {
+        //城市选择按钮事件处理
+        if(view.getId() == R.id.title_city_manager)
+        {
+            //跳转activity
+            Intent i = new Intent(this , SelectCity.class);
+
+            //startActivity(i);
+
+            startActivityForResult( i , 1 );
+
+        }
+
+        //更新按钮事件处理
         if(view.getId() == R.id.title_update_btn)
         {
             //SharedPreferences是Android平台上一个轻量级的存储类，用来保存应用的一些常用配置,文件生成为xml文件
@@ -137,7 +161,32 @@ public class MainActivity extends Activity implements View.OnClickListener
             {
                 Log.d("myWeather" , "网络OK");
 
+                //根据citycode查询天气状况
                 queryWeatherCode(cityCode);
+            }
+            else
+            {
+                Log.d("myWeather" , "网络挂了");
+                Toast.makeText(MainActivity.this , "网络挂了" , Toast.LENGTH_LONG).show();
+            }
+        }
+    //方法结束标记
+    }
+
+    protected void onActivityResult(int requestCode , int resultCode , Intent data)
+    {
+        if(requestCode == 1 && resultCode == RESULT_OK)
+        {
+            String newCityCode = data.getStringExtra("cityCode");
+
+            Log.d("myWeather" , "选择的城市代码是：" + newCityCode);
+
+            if(NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE)
+            {
+                Log.d("myWeather" , "网络OK");
+
+                //根据citycode查询天气状况
+                queryWeatherCode(newCityCode);
             }
             else
             {
@@ -186,6 +235,7 @@ public class MainActivity extends Activity implements View.OnClickListener
 
                     //解析数据
                     todayWeather = parseXML(responseStr);
+                    //更新UI数据
                     if(todayWeather != null)
                     {
                         Log.d("myWeather" , todayWeather.toString());
