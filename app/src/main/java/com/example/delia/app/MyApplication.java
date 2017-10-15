@@ -18,15 +18,16 @@ import java.util.List;
  * Created by delia on 06/10/2017.
  */
 
-//通过继承Application类来实现应用程序级的全局变量,单例，程序共享
+//通过继承Application类来实现应用程序级的全局变量,单例,程序共享
 public class MyApplication extends Application
 {
     private static final String TAG = "MyAPP";
 
     private static MyApplication myApplication;
 
+    //操作数据库类的对象
     private CityDB mCityDB;
-
+    //城市列表
     private List<City> mCityList;
 
     @Override
@@ -40,6 +41,7 @@ public class MyApplication extends Application
 
         myApplication = this;
 
+        //数据库操作: 初始化一个操作数据库的对象
         mCityDB = openCityDB();
 
         initCityList();
@@ -64,8 +66,11 @@ public class MyApplication extends Application
 
     private boolean prepareCityList()
     {
+        //通过调用数据库对象的方法获得所有城市信息
         mCityList = mCityDB.getAllCity();
         int i=0;
+
+        //遍历城市信息
         for (City city : mCityList) {
             i++;
             String cityName = city.getCity();
@@ -77,6 +82,7 @@ public class MyApplication extends Application
 
     }
 
+    //城市列表信息也可以被其他类使用
     public List<City> getCityList()
     {
         return mCityList;
@@ -88,6 +94,7 @@ public class MyApplication extends Application
     }
 
 
+    //准备一个数据库对象
     private CityDB openCityDB()
     {
         String path = "/data"

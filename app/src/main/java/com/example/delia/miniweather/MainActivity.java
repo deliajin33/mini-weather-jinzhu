@@ -42,11 +42,11 @@ public class MainActivity extends Activity implements View.OnClickListener
     private ImageView mCitySelect;
 
 
-    private TextView cityTv , timeTv , humidityTv , weekTv , pmDataTv , pmQualityTv , temperatureTv , climateTv , windTv , city_name_Tv;
+    private TextView cityTv , timeTv , currentTemperatureTv , humidityTv , weekTv , pmDataTv , pmQualityTv , temperatureTv , climateTv , windTv , city_name_Tv;
 
     private ImageView weatherImg , pmImg;
 
-    //Handler来根据接收的消息，处理UI更新。Thread线程发出Handler消息，通知更新UI
+    //Handler来根据接收的消息，处理UI更新。子Thread线程发出Handler消息，通知更新UI
     private Handler mHandler = new Handler()
     {
         public void handleMessage(android.os.Message msg)
@@ -107,7 +107,12 @@ public class MainActivity extends Activity implements View.OnClickListener
         city_name_Tv = (TextView) findViewById(R.id.title_city_name);
         cityTv = (TextView) findViewById(R.id.city);
         timeTv = (TextView) findViewById(R.id.time);
+
+        currentTemperatureTv = (TextView)findViewById(R.id.current_temperature);
+
         humidityTv = (TextView) findViewById(R.id.humidity);
+
+
         weekTv = (TextView) findViewById(R.id.week_today);
         pmDataTv = (TextView) findViewById(R.id.pm_data);
         pmQualityTv = (TextView) findViewById(R.id.pm2_5_quality);
@@ -121,6 +126,7 @@ public class MainActivity extends Activity implements View.OnClickListener
         city_name_Tv.setText("N/A");
         cityTv.setText("N/A");
         timeTv.setText("N/A");
+        currentTemperatureTv.setText("N/A");
         humidityTv.setText("N/A");
         pmDataTv.setText("N/A");
         pmQualityTv.setText("N/A");
@@ -143,6 +149,9 @@ public class MainActivity extends Activity implements View.OnClickListener
             //跳转activity
             Intent i = new Intent(this , SelectCity.class);
 
+            /**在启动另外一个Activity的时候，有两种方法，
+             * 一种是直接使用startActivity，
+             * 另外一种就是使用startActivityForResult**/
             //startActivity(i);
 
             startActivityForResult( i , 1 );
@@ -173,6 +182,12 @@ public class MainActivity extends Activity implements View.OnClickListener
     //方法结束标记
     }
 
+    /**startActivityForResult的主要作用就是它可以回传数据，假设我们有两个页面，
+     * 首先进入第一个页面，里面有一个按钮，用于进入下一个页面，当进入下一个页面时，
+     * 进行设置操作，并在其finish()动作或者back动作后，将设置的值回传给第一个页面，
+     * 从而第一个页面来显示所得到的值。
+     * 这个有一点像回调方法，就是在第二个页面finish()动作或者back动作后，
+     * 会回调第一个页面的onActivityResult()方法**/
     protected void onActivityResult(int requestCode , int resultCode , Intent data)
     {
         if(requestCode == 1 && resultCode == RESULT_OK)
@@ -213,21 +228,21 @@ public class MainActivity extends Activity implements View.OnClickListener
                 TodayWeather todayWeather = null;
 
                 try {
-                    URL url = new URL(address);
-                    con = (HttpURLConnection) url.openConnection();
+                        URL url = new URL(address);
+                        con = (HttpURLConnection) url.openConnection();
 
-                    con.setRequestMethod("GET");
-                    con.setConnectTimeout(8000);
-                    con.setReadTimeout(8000);
+                        con.setRequestMethod("GET");
+                        con.setConnectTimeout(8000);
+                        con.setReadTimeout(8000);
 
-                    InputStream in = con.getInputStream();
-                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                    StringBuilder response = new StringBuilder();
+                        InputStream in = con.getInputStream();
+                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                        StringBuilder response = new StringBuilder();
 
-                    String str;
-                    while ( (str = reader.readLine()) != null ) {
-                        response.append(str);
-                        Log.d("myWeather", str);
+                        String str;
+                        while ( (str = reader.readLine()) != null ) {
+                            response.append(str);
+                            Log.d("myWeather", str);
 
                     }
                     String responseStr = response.toString();
@@ -240,6 +255,7 @@ public class MainActivity extends Activity implements View.OnClickListener
                     {
                         Log.d("myWeather" , todayWeather.toString());
 
+                        //子线程与主线程的通信机制
                         Message msg = new Message();
                         msg.what = UPDATE_TODAY_WEATHER;
                         msg.obj = todayWeather;
@@ -274,6 +290,7 @@ public class MainActivity extends Activity implements View.OnClickListener
     {
         TodayWeather todayWeather = null;
 
+        //???????
         int fengxiangCount = 0;
         int fengliCount = 0;
         int dateCount = 0;
@@ -458,6 +475,9 @@ public class MainActivity extends Activity implements View.OnClickListener
         city_name_Tv.setText(todayWeather.getCity() + "天气");
         cityTv.setText(todayWeather.getCity() );
         timeTv.setText(todayWeather.getUpdatetime() + "发布");
+
+        currentTemperatureTv.setText(todayWeather.getWendu());
+
         humidityTv.setText("湿度：" + todayWeather.getShidu());
         pmDataTv.setText(todayWeather.getPm25());
         pmQualityTv.setText(todayWeather.getQuality());

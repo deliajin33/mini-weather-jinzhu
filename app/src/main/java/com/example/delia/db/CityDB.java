@@ -23,6 +23,7 @@ public class CityDB
 
     public CityDB(Context context , String path)
     {
+        //打开数据库连接
         db = context.openOrCreateDatabase(path , Context.MODE_PRIVATE , null);
     }
 

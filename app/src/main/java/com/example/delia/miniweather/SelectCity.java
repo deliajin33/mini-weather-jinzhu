@@ -9,7 +9,7 @@ import android.widget.ImageView;
 /**
  * Created by delia on 05/10/2017.
  */
-
+//选择城市界面
 public class SelectCity extends Activity implements View.OnClickListener
 {
     //返回按钮
