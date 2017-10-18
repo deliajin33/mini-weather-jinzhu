@@ -512,7 +512,7 @@ public class MainActivity extends Activity implements View.OnClickListener
         city_name_Tv.setText(todayWeather.getCity() + "天气");
         cityTv.setText(todayWeather.getCity() );
         timeTv.setText(todayWeather.getUpdatetime() + "发布");
-        currentTemperatureTv.setText(todayWeather.getWendu());
+        currentTemperatureTv.setText("温度："+ todayWeather.getWendu() + "°C");
         humidityTv.setText("湿度：" + todayWeather.getShidu());
         pmDataTv.setText(todayWeather.getPm25());
         pmQualityTv.setText(todayWeather.getQuality());
