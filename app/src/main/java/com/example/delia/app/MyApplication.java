@@ -42,7 +42,7 @@ public class MyApplication extends Application
         myApplication = this;
 
         //数据库操作: 初始化一个操作数据库的对象
-        mCityDB = openCityDB();
+        mCityDB = openCityDB(); //该方法会返回一个手机上.db文件存储的path，该path是构造方法的参数
 
         initCityList();
     }
@@ -94,7 +94,8 @@ public class MyApplication extends Application
     }
 
 
-    //准备一个数据库对象
+    /**将assets下的数据库文件拷贝到手机相应合适的数据库目录下，
+    将该目录作为参数返回给数据库类，以便于数据库类操作时可以到相应的目录下读取到该db文件**/
     private CityDB openCityDB()
     {
         String path = "/data"

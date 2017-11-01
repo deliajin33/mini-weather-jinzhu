@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by delia on 06/10/2017.
  */
-
+//数据库操作类
 public class CityDB
 {
     public static final String CITY_DB_NAME = "city.db";
@@ -23,7 +23,6 @@ public class CityDB
 
     public CityDB(Context context , String path)
     {
-        //打开数据库连接
         db = context.openOrCreateDatabase(path , Context.MODE_PRIVATE , null);
     }
 
