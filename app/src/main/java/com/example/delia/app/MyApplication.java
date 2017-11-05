@@ -18,7 +18,7 @@ import java.util.List;
  * Created by delia on 06/10/2017.
  */
 
-//通过继承Application类来实现应用程序级的全局变量,单例,程序共享
+//通过继承Application类来实现应用程序级的全局变量,单例,只有一个，程序共享
 public class MyApplication extends Application
 {
     private static final String TAG = "MyAPP";
