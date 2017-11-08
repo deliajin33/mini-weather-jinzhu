@@ -41,7 +41,6 @@ public class MainActivity extends Activity implements View.OnClickListener
 
     private ImageView mCitySelect;
 
-
     private TextView cityTv , timeTv , currentTemperatureTv , humidityTv , weekTv , pmDataTv , pmQualityTv , temperatureTv , climateTv , windTv , city_name_Tv;
 
     private ImageView weatherImg , pmImg;
@@ -115,10 +114,7 @@ public class MainActivity extends Activity implements View.OnClickListener
         timeTv = (TextView) findViewById(R.id.time);
 
         currentTemperatureTv = (TextView)findViewById(R.id.current_temperature);
-
         humidityTv = (TextView) findViewById(R.id.humidity);
-
-
         weekTv = (TextView) findViewById(R.id.week_today);
         pmDataTv = (TextView) findViewById(R.id.pm_data);
         pmQualityTv = (TextView) findViewById(R.id.pm2_5_quality);
@@ -182,6 +178,7 @@ public class MainActivity extends Activity implements View.OnClickListener
             }
             else
             {
+                //将上次成功获取并存储到sharedPreferences里的数据取出并解析，显示到页面上
                 String responseStr_last = sharedPreferences.getString("天气数据","");
                 TodayWeather todayWeather = parseXML(responseStr_last);
 
@@ -212,7 +209,9 @@ public class MainActivity extends Activity implements View.OnClickListener
 
             //存储城市的cityCode
             SharedPreferences.Editor editor = sharedPreferences.edit();
+
             editor.putString("main_city_code" , newCityCode);
+
             editor.commit();
 
             //cityCode存不进去

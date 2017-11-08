@@ -77,11 +77,15 @@ public class SelectCity extends Activity implements View.OnClickListener
                         Toast.makeText(SelectCity.this , "你选择了"  + mList.getItemAtPosition(index) , Toast.LENGTH_SHORT).show();
                         //Toast.makeText(SelectCity.this , "你单击了"  + index , Toast.LENGTH_SHORT).show();
 
-//                        City city = cityList.get(index);
-//                        Intent i = new Intent();
-//                        i.putExtra("SelectedCityCode" , city.getNumber());
-//                        setResult(RESULT_OK , i);
-//                        finish();
+                        City city = cityList.get(index);
+
+                        Intent i = new Intent();
+
+                        i.putExtra("cityCode" , city.getNumber());
+
+                        setResult(RESULT_OK , i);
+
+                        finish();
 
                     }
                 });
