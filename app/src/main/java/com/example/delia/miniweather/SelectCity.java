@@ -5,7 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.Toast;
+
+import com.example.delia.app.MyApplication;
+import com.example.delia.bean.City;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by delia on 05/10/2017.
@@ -15,6 +25,14 @@ public class SelectCity extends Activity implements View.OnClickListener
 {
     //返回按钮
     private ImageView mBackBtn;
+
+    private ListView mList;
+
+    private List<City> cityList;
+
+    private ArrayList<String> cityNameList = new ArrayList<>();
+
+    private ArrayAdapter<String> adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -27,8 +45,51 @@ public class SelectCity extends Activity implements View.OnClickListener
         mBackBtn = (ImageView)findViewById(R.id.title_back);
         mBackBtn.setOnClickListener(this);
 
+        initViews();
 
     }
+
+    //编写initViews方法实现城市列表的展示
+    private void initViews()
+    {
+        mList = (ListView)findViewById(R.id.title_list);
+
+        //从数据库表中获取城市列表信息
+        MyApplication myApplication = (MyApplication)getApplication();
+        cityList = myApplication.getCityList();
+
+        for(City city : cityList)
+        {
+            cityNameList.add(city.getCity());
+        }
+
+        adapter = new ArrayAdapter<>(SelectCity.this,android.R.layout.simple_list_item_1,cityNameList);
+
+        mList.setAdapter(adapter);
+
+        mList.setOnItemClickListener(
+                new AdapterView.OnItemClickListener()
+                {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int index, long l)
+                    {
+
+                        Toast.makeText(SelectCity.this , "你选择了"  + mList.getItemAtPosition(index) , Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(SelectCity.this , "你单击了"  + index , Toast.LENGTH_SHORT).show();
+
+//                        City city = cityList.get(index);
+//                        Intent i = new Intent();
+//                        i.putExtra("SelectedCityCode" , city.getNumber());
+//                        setResult(RESULT_OK , i);
+//                        finish();
+
+                    }
+                });
+    }
+
+
+
+
 
     //处理组件事件
     public void onClick(View v)
@@ -59,12 +120,6 @@ public class SelectCity extends Activity implements View.OnClickListener
     //方法结束标记
     }
 
-//    存储当前城市cityCode信息
-//    public void saveCityCode()
-//    {
-//        SharedPreferences sharedPreferences = getSharedPreferences("config" , MODE_PRIVATE);
-//        SharedPreferences.Editor editor = sharedPreferences.edit();
-//        editor.putString("main_city_code" , "101160101");
-//    }
+
 
 }
