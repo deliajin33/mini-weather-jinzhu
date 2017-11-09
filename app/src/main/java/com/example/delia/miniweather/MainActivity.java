@@ -102,6 +102,29 @@ public class MainActivity extends Activity implements View.OnClickListener
 
         //调用方法初始化控件
         initView();
+//        String cityCode = sharedPreferences.getString("main_city_code" , "101010100");
+//        if(NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE)
+//        {
+//            Log.d("myWeather" , "网络OK");
+//
+//            //根据citycode查询天气状况
+//            queryWeatherCode(cityCode);
+//        }
+//        else
+//        {
+//            //将上次成功获取并存储到sharedPreferences里的数据取出并解析，显示到页面上
+//            String responseStr_last = sharedPreferences.getString("天气数据","");
+//            TodayWeather todayWeather = parseXML(responseStr_last);
+//
+//            if(todayWeather != null)
+//            {
+//                updateTodayWeahter(todayWeather);
+//            }
+//
+//            Log.d("myWeather" , "网络挂了");
+//
+//            Toast.makeText(MainActivity.this , "网络挂了" , Toast.LENGTH_LONG).show();
+//        }
 
     }
 
@@ -356,9 +379,7 @@ public class MainActivity extends Activity implements View.OnClickListener
                     case XmlPullParser.START_TAG:
                         if ( xmlPullParser.getName().equals("resp") )
                         {
-
                             todayWeather = new TodayWeather();
-
                         }
                         if (todayWeather != null)
                         {
@@ -499,7 +520,6 @@ public class MainActivity extends Activity implements View.OnClickListener
         {
             e.printStackTrace();
         }
-
         return todayWeather;
     //方法结束标记
     }
@@ -507,43 +527,89 @@ public class MainActivity extends Activity implements View.OnClickListener
     //更新窗口中的天气数据
     void updateTodayWeahter(TodayWeather todayWeather)
     {
-
-        city_name_Tv.setText(todayWeather.getCity() + "天气");
-        cityTv.setText(todayWeather.getCity() );
-        timeTv.setText(todayWeather.getUpdatetime() + "发布");
-        currentTemperatureTv.setText("温度："+ todayWeather.getWendu() + "°C");
-        humidityTv.setText("湿度：" + todayWeather.getShidu());
-        pmDataTv.setText(todayWeather.getPm25());
-        pmQualityTv.setText(todayWeather.getQuality());
-        weekTv.setText(todayWeather.getDate());
-        temperatureTv.setText(todayWeather.getHigh() + "~" + todayWeather.getLow());
-        climateTv.setText(todayWeather.getType());
-        windTv.setText("风力：" + todayWeather.getFengli());
+        if(todayWeather.getCity() != null)
+        {
+            city_name_Tv.setText(todayWeather.getCity() + "天气");
+        }
+        if(todayWeather.getCity() != null)
+        {
+            cityTv.setText(todayWeather.getCity() );
+        }
+        if(todayWeather.getUpdatetime() != null)
+        {
+            timeTv.setText(todayWeather.getUpdatetime() + "发布");
+        }
+        if(todayWeather.getWendu() != null)
+        {
+            currentTemperatureTv.setText("温度："+ todayWeather.getWendu() + "°C");
+        }
+        if(todayWeather.getShidu() != null)
+        {
+            humidityTv.setText("湿度：" + todayWeather.getShidu());
+        }
+        if(todayWeather.getPm25() != null)
+        {
+            pmDataTv.setText(todayWeather.getPm25());
+        }
+        if(todayWeather.getQuality() != null)
+        {
+            pmQualityTv.setText(todayWeather.getQuality());
+        }
+        if(todayWeather.getDate() != null)
+        {
+            weekTv.setText(todayWeather.getDate());
+        }
+        if(todayWeather.getHigh() != null && todayWeather.getLow()!= null)
+        {
+            temperatureTv.setText(todayWeather.getHigh() + "~" + todayWeather.getLow());
+        }
+        if(todayWeather.getType() != null)
+        {
+            climateTv.setText(todayWeather.getType());
+        }
+        if(todayWeather.getFengli() != null)
+        {
+            windTv.setText("风力：" + todayWeather.getFengli());
+        }
+//        city_name_Tv.setText(todayWeather.getCity() + "天气");
+//        cityTv.setText(todayWeather.getCity() );
+//        timeTv.setText(todayWeather.getUpdatetime() + "发布");
+//        currentTemperatureTv.setText("温度："+ todayWeather.getWendu() + "°C");
+//        humidityTv.setText("湿度：" + todayWeather.getShidu());
+//        pmDataTv.setText(todayWeather.getPm25());
+//        pmQualityTv.setText(todayWeather.getQuality());
+//        weekTv.setText(todayWeather.getDate());
+//        temperatureTv.setText(todayWeather.getHigh() + "~" + todayWeather.getLow());
+//        climateTv.setText(todayWeather.getType());
+//        windTv.setText("风力：" + todayWeather.getFengli());
 
 
         //更新pm图片
-        int pm25 = Integer.parseInt(todayWeather.getPm25());
-        if(pm25 >= 0 && pm25 <= 50)
+        if(todayWeather.getPm25()!=null)
         {
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_0_50);
-        }
-        if(pm25 >= 51 && pm25 <= 100)
-        {
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_51_100);
-        }
-        if(pm25 >= 101 && pm25 <= 150)
-        {
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_101_150);
-        }
-        if(pm25 >= 151 && pm25 <= 200)
-        {
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_151_200);
-        }
-        if(pm25 >= 201 && pm25 <= 300)
-        {
-            pmImg.setImageResource(R.drawable.biz_plugin_weather_201_300);
-        }
+            int pm25 = Integer.parseInt(todayWeather.getPm25());
+            if(pm25 >= 0 && pm25 <= 50)
+            {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_0_50);
+            }
+            if(pm25 >= 51 && pm25 <= 100)
+            {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_51_100);
+            }
+            if(pm25 >= 101 && pm25 <= 150)
+            {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_101_150);
+            }
+            if(pm25 >= 151 && pm25 <= 200)
+            {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_151_200);
+            }
+            if(pm25 >= 201 && pm25 <= 300)
+            {
+                pmImg.setImageResource(R.drawable.biz_plugin_weather_201_300);
+            }
 
+        }
 
         //更新天气图片
         switch (todayWeather.getType())
@@ -619,11 +685,4 @@ public class MainActivity extends Activity implements View.OnClickListener
 
 
 
-
-
-
-
-
-
-    
 }
