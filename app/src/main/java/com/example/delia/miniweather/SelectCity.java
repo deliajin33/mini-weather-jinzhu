@@ -4,6 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -32,7 +36,11 @@ public class SelectCity extends Activity implements View.OnClickListener
 
     private ArrayList<String> cityNameList = new ArrayList<>();
 
+    private ArrayList<String> filterCityList;
+
     private ArrayAdapter<String> adapter;
+
+    private MyEditText myEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -43,6 +51,7 @@ public class SelectCity extends Activity implements View.OnClickListener
 
         //为返回按钮添加加监视器
         mBackBtn = (ImageView)findViewById(R.id.title_back);
+
         mBackBtn.setOnClickListener(this);
 
         initViews();
@@ -54,8 +63,11 @@ public class SelectCity extends Activity implements View.OnClickListener
     {
         mList = (ListView)findViewById(R.id.title_list);
 
+        myEditText = (MyEditText) findViewById(R.id.search_city);
+
         //从数据库表中获取城市列表信息
         MyApplication myApplication = (MyApplication)getApplication();
+
         cityList = myApplication.getCityList();
 
         for(City city : cityList)
@@ -89,9 +101,62 @@ public class SelectCity extends Activity implements View.OnClickListener
 
                     }
                 });
+
+        myEditText.addTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2)
+            {
+                filterCity(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable)
+            {
+
+            }
+        });
     }
 
+    private void filterCity(String filterStr)
+    {
+        filterCityList = new ArrayList<>();
 
+        Log.d("Filter" , filterStr);
+
+        if(TextUtils.isEmpty(filterStr))
+        {
+            for(City city: cityList)
+            {
+                filterCityList.add(city.getCity());
+                //mList.setAdapter(adapter);
+            }
+        }
+        else
+        {
+            filterCityList.clear();
+
+            for(City city : cityList)
+            {
+                if(city.getCity().indexOf(filterStr.toString()) != -1)
+                {
+                    filterCityList.add(city.getCity());
+                }
+            }
+        }
+
+//        adapter.updateListView(filterCityList);
+        adapter = new ArrayAdapter<>(SelectCity.this,android.R.layout.simple_list_item_1,filterCityList);
+
+        mList.setAdapter(adapter);
+
+    }
 
 
 

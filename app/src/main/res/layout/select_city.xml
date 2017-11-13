@@ -42,8 +42,21 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/title_top">
 
-        //android:layout_below="@id/search_city"
+        <com.example.delia.miniweather.MyEditText
+            android:id="@+id/search_city"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="searching city"
+            android:drawableLeft="@drawable/magnifying_glass"
+            android:drawablePadding="6.0dp"
+            android:singleLine="true"
+            android:background="@drawable/contact_search_box_edittext_keyword_background"
+            android:textColor="#ff000000"
+            android:textColorHint="#ffcccccc"
+            android:textSize="15.0dp"/>
+
         <ListView
+            android:layout_below="@id/search_city"
             android:id="@+id/title_list"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
