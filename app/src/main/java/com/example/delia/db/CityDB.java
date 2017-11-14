@@ -47,4 +47,24 @@ public class CityDB
         }
         return list;
     }
+/**
+    public City getACity(String cityName)
+    {
+        City item = null;
+
+        Cursor c = db.rawQuery("SELECT * from " + CITY_TABLE_NAME + "where ", null);
+
+        while(c.moveToNext())
+        {
+            String province = c.getString(c.getColumnIndex("province"));
+            String city = c.getString(c.getColumnIndex("city"));
+            String number = c.getString(c.getColumnIndex("number"));
+            String allPY = c.getString(c.getColumnIndex("allpy"));
+            String allFirstPY = c.getString(c.getColumnIndex("allfirstpy"));
+            String firstPY = c.getString(c.getColumnIndex("firstpy"));
+            item = new City(province , city , number , firstPY , allPY , allFirstPY);
+        }
+        return item;
+    }
+ **/
 }

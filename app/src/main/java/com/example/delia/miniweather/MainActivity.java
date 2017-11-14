@@ -12,7 +12,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.LocationClient;
+
+import com.baidu.location.LocationClientOption;
+import com.example.delia.app.MyApplication;
+import com.example.delia.bean.City;
 import com.example.delia.bean.TodayWeather;
+import com.example.delia.util.MyLocationListener;
 import com.example.delia.util.NetUtil;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -26,6 +32,7 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.List;
 
 /**
  * Created by delia on 21/09/2017.
@@ -47,6 +54,12 @@ public class MainActivity extends Activity implements View.OnClickListener
 
     private SharedPreferences sharedPreferences;
 
+    //定位
+    public LocationClient mLocationClient = null;
+
+    private MyLocationListener myListener = new MyLocationListener();
+
+
 
     //Handler来根据接收的消息，处理UI更新。子Thread线程发出Handler消息，通知更新UI
     private Handler mHandler = new Handler()
@@ -56,21 +69,25 @@ public class MainActivity extends Activity implements View.OnClickListener
             switch (msg.what)
             {
                 case UPDATE_TODAY_WEATHER:
+
                     updateTodayWeahter( (TodayWeather)msg.obj );
+
                     break;
+
                 default:
+
                     break;
             }
         }
     };
-
-
+    
     @Override
     //Android 系统初始化它的程序是通过活动中的 onCreate() 回调的调用开始的,类似main()
 
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.weather_info);
 
         //初始化sharedPreferences
@@ -78,6 +95,7 @@ public class MainActivity extends Activity implements View.OnClickListener
 
         //为更新按钮添加事件,Activity自身为监听器
         mUpdateBtn = (ImageView)findViewById(R.id.title_update_btn);
+
         mUpdateBtn.setOnClickListener(this);
 
         //检查网络连接情况
@@ -91,40 +109,42 @@ public class MainActivity extends Activity implements View.OnClickListener
         else
         {
             Log.d("myWeather" , "网络挂了");
+
             Toast.makeText(MainActivity.this , "网络挂了" , Toast.LENGTH_LONG).show();
         }
 
         //选择城市按钮
         mCitySelect = (ImageView)findViewById(R.id.title_city_manager);
+
         mCitySelect.setOnClickListener(this);
 
+        //声明LocationClient类
+        mLocationClient = new LocationClient(getApplicationContext());
 
+        //注册监听函数
+        mLocationClient.registerLocationListener(myListener);
+
+        /**可选，是否需要地址信息，默认为不需要，即参数为false
+         如果开发者需要获得当前点的地址信息，此处必须为true**/
+        LocationClientOption option = new LocationClientOption();
+
+        option.setIsNeedAddress(true);
+
+        option.setOpenGps(true);
+
+        option.setAddrType("all");
+
+        option.setPriority(LocationClientOption.GpsFirst);
+
+        option.disableCache(false);
+
+        mLocationClient.setLocOption(option);
+
+        mLocationClient.start();
 
         //调用方法初始化控件
         initView();
-//        String cityCode = sharedPreferences.getString("main_city_code" , "101010100");
-//        if(NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE)
-//        {
-//            Log.d("myWeather" , "网络OK");
-//
-//            //根据citycode查询天气状况
-//            queryWeatherCode(cityCode);
-//        }
-//        else
-//        {
-//            //将上次成功获取并存储到sharedPreferences里的数据取出并解析，显示到页面上
-//            String responseStr_last = sharedPreferences.getString("天气数据","");
-//            TodayWeather todayWeather = parseXML(responseStr_last);
-//
-//            if(todayWeather != null)
-//            {
-//                updateTodayWeahter(todayWeather);
-//            }
-//
-//            Log.d("myWeather" , "网络挂了");
-//
-//            Toast.makeText(MainActivity.this , "网络挂了" , Toast.LENGTH_LONG).show();
-//        }
+        
 
     }
 
@@ -162,7 +182,6 @@ public class MainActivity extends Activity implements View.OnClickListener
         windTv.setText("N/A");
     //方法结束标记
     }
-
 
 
     //监听器处理点击事件
@@ -203,6 +222,7 @@ public class MainActivity extends Activity implements View.OnClickListener
             {
                 //将上次成功获取并存储到sharedPreferences里的数据取出并解析，显示到页面上
                 String responseStr_last = sharedPreferences.getString("天气数据","");
+
                 TodayWeather todayWeather = parseXML(responseStr_last);
 
                 if(todayWeather != null)
@@ -681,8 +701,6 @@ public class MainActivity extends Activity implements View.OnClickListener
         Toast.makeText(MainActivity.this , "更新成功！" , Toast.LENGTH_SHORT).show();
 
     }
-
-
 
 
 }

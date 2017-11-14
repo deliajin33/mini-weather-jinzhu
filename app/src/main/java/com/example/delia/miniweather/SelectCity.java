@@ -135,7 +135,6 @@ public class SelectCity extends Activity implements View.OnClickListener
             for(City city: cityList)
             {
                 filterCityList.add(city.getCity());
-                //mList.setAdapter(adapter);
             }
         }
         else
@@ -167,9 +166,6 @@ public class SelectCity extends Activity implements View.OnClickListener
         switch (v.getId())
         {
             case R.id.title_back:
-
-//              存储城市cityCode信息
-//              saveCityCode();
 
                 Intent i = new Intent();
 

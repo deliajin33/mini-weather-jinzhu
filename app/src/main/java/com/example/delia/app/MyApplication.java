@@ -64,6 +64,7 @@ public class MyApplication extends Application
 
     }
 
+
     private boolean prepareCityList()
     {
         //通过调用数据库对象的方法获得所有城市信息
