@@ -42,6 +42,8 @@ public class SelectCity extends Activity implements View.OnClickListener
 
     private MyEditText myEditText;
 
+    private String searchCityCode = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -63,7 +65,7 @@ public class SelectCity extends Activity implements View.OnClickListener
     {
         mList = (ListView)findViewById(R.id.title_list);
 
-        myEditText = (MyEditText) findViewById(R.id.search_city);
+        myEditText = (MyEditText)findViewById(R.id.search_city);
 
         //从数据库表中获取城市列表信息
         MyApplication myApplication = (MyApplication)getApplication();
@@ -130,6 +132,7 @@ public class SelectCity extends Activity implements View.OnClickListener
 
         Log.d("Filter" , filterStr);
 
+        //用户输入若为空，则仍然显示完整列表
         if(TextUtils.isEmpty(filterStr))
         {
             for(City city: cityList)
@@ -137,23 +140,51 @@ public class SelectCity extends Activity implements View.OnClickListener
                 filterCityList.add(city.getCity());
             }
         }
-        else
+        else //用户输入不为空，则显示相应的唯一城市
         {
             filterCityList.clear();
 
+            //遍历查询和搜索字符串匹配的城市
             for(City city : cityList)
             {
-                if(city.getCity().indexOf(filterStr.toString()) != -1)
+                int index = city.getCity().indexOf(filterStr.toString());
+
+                if(index != -1)
                 {
                     filterCityList.add(city.getCity());
+
+                    searchCityCode = city.getNumber();
                 }
             }
+
+
         }
 
-//        adapter.updateListView(filterCityList);
+        //adapter.updateListView(filterCityList);
         adapter = new ArrayAdapter<>(SelectCity.this,android.R.layout.simple_list_item_1,filterCityList);
 
         mList.setAdapter(adapter);
+
+        mList.setOnItemClickListener(
+                new AdapterView.OnItemClickListener()
+                {
+                    @Override
+                    public void onItemClick(AdapterView<?> adapterView, View view, int index, long l)
+                    {
+
+                        Toast.makeText(SelectCity.this , "你选择了"  + mList.getItemAtPosition(index) , Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(SelectCity.this , "你单击了"  + index , Toast.LENGTH_SHORT).show();
+                        
+                        Intent i = new Intent();
+
+                        i.putExtra("cityCode" , searchCityCode);
+
+                        setResult(RESULT_OK , i);
+
+                        finish();
+
+                    }
+                });
 
     }
 
@@ -162,7 +193,6 @@ public class SelectCity extends Activity implements View.OnClickListener
     //处理组件事件
     public void onClick(View v)
     {
-
         switch (v.getId())
         {
             case R.id.title_back:
@@ -175,7 +205,6 @@ public class SelectCity extends Activity implements View.OnClickListener
 
                 finish();
 
-                break;
             default:
                 break;
         }
