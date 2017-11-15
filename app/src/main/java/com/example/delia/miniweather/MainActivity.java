@@ -17,6 +17,7 @@ import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.example.delia.app.MyApplication;
 import com.example.delia.bean.City;
+import com.example.delia.bean.ForecastWeather;
 import com.example.delia.bean.TodayWeather;
 import com.example.delia.util.MyLocationListener;
 import com.example.delia.util.NetUtil;
@@ -48,6 +49,8 @@ public class MainActivity extends Activity implements View.OnClickListener
 
     private ImageView mCitySelect;
 
+    private ImageView mCityLocation;
+
     private TextView cityTv , timeTv , currentTemperatureTv , humidityTv , weekTv , pmDataTv , pmQualityTv , temperatureTv , climateTv , windTv , city_name_Tv;
 
     private ImageView weatherImg , pmImg;
@@ -59,6 +62,20 @@ public class MainActivity extends Activity implements View.OnClickListener
 
     private MyLocationListener myListener = new MyLocationListener();
 
+    //未来6天天气
+    private ForecastWeather weather1 , weather2 , weather3 , weather4 , weather5 , weather6;
+    private TextView weekTv1,temperatureTv1,climateTv1,windTv1;
+    private TextView weekTv2,temperatureTv2,climateTv2,windTv2;
+    private TextView weekTv3,temperatureTv3,climateTv3,windTv3;
+    private TextView weekTv4,temperatureTv4,climateTv4,windTv4;
+    private TextView weekTv5,temperatureTv5,climateTv5,windTv5;
+    private TextView weekTv6,temperatureTv6,climateTv6,windTv6;
+    private ImageView weatherImg1;
+    private ImageView weatherImg2;
+    private ImageView weatherImg3;
+    private ImageView weatherImg4;
+    private ImageView weatherImg5;
+    private ImageView weatherImg6;
 
 
     //Handler来根据接收的消息，处理UI更新。子Thread线程发出Handler消息，通知更新UI
@@ -118,11 +135,17 @@ public class MainActivity extends Activity implements View.OnClickListener
 
         mCitySelect.setOnClickListener(this);
 
+        //定位按钮
+        mCityLocation = (ImageView)findViewById(R.id.title_location);
+
+        mCityLocation.setOnClickListener(this);
+
         //声明LocationClient类
         mLocationClient = new LocationClient(getApplicationContext());
 
         //注册监听函数
         mLocationClient.registerLocationListener(myListener);
+
 
         /**可选，是否需要地址信息，默认为不需要，即参数为false
          如果开发者需要获得当前点的地址信息，此处必须为true**/
@@ -168,7 +191,44 @@ public class MainActivity extends Activity implements View.OnClickListener
         weatherImg = (ImageView) findViewById(R.id.weather_img);
         pmImg = (ImageView) findViewById(R.id.pm2_5_img);
 
+        //未来六天天气1
+        weekTv1 = (TextView) findViewById(R.id.week_today_1);
+        temperatureTv1 = (TextView) findViewById(R.id.temperature_1);
+        climateTv1 = (TextView) findViewById(R.id.climate_1);
+        windTv1 = (TextView) findViewById(R.id.wind_1);
+        weatherImg1 = (ImageView) findViewById(R.id.weather_img_1);
+        //未来六天天气2
+        weekTv1 = (TextView) findViewById(R.id.week_today_2);
+        temperatureTv1 = (TextView) findViewById(R.id.temperature_2);
+        climateTv1 = (TextView) findViewById(R.id.climate_2);
+        windTv1 = (TextView) findViewById(R.id.wind_2);
+        weatherImg1 = (ImageView) findViewById(R.id.weather_img_2);
+        //未来六天天气3
+        weekTv1 = (TextView) findViewById(R.id.week_today_3);
+        temperatureTv1 = (TextView) findViewById(R.id.temperature_3);
+        climateTv1 = (TextView) findViewById(R.id.climate_3);
+        windTv1 = (TextView) findViewById(R.id.wind_3);
+        weatherImg1 = (ImageView) findViewById(R.id.weather_img_3);
+        //未来六天天气4
+        weekTv1 = (TextView) findViewById(R.id.week_today_4);
+        temperatureTv1 = (TextView) findViewById(R.id.temperature_4);
+        climateTv1 = (TextView) findViewById(R.id.climate_4);
+        windTv1 = (TextView) findViewById(R.id.wind_4);
+        weatherImg1 = (ImageView) findViewById(R.id.weather_img_4);
+        //未来六天天气5
+        weekTv1 = (TextView) findViewById(R.id.week_today_5);
+        temperatureTv1 = (TextView) findViewById(R.id.temperature_5);
+        climateTv1 = (TextView) findViewById(R.id.climate_5);
+        windTv1 = (TextView) findViewById(R.id.wind_5);
+        weatherImg1 = (ImageView) findViewById(R.id.weather_img_5);
+        //未来六天天气6
+        weekTv1 = (TextView) findViewById(R.id.week_today_6);
+        temperatureTv1 = (TextView) findViewById(R.id.temperature_6);
+        climateTv1 = (TextView) findViewById(R.id.climate_6);
+        windTv1 = (TextView) findViewById(R.id.wind_6);
+        weatherImg1 = (ImageView) findViewById(R.id.weather_img_6);
 
+        //初始化
         city_name_Tv.setText("N/A");
         cityTv.setText("N/A");
         timeTv.setText("N/A");
@@ -234,6 +294,64 @@ public class MainActivity extends Activity implements View.OnClickListener
 
                 Toast.makeText(MainActivity.this , "网络挂了" , Toast.LENGTH_LONG).show();
             }
+        }
+
+        //城市定位按钮事件处理
+        if(view.getId() == R.id.title_location)
+        {
+            //声明LocationClient类
+            mLocationClient = new LocationClient(getApplicationContext());
+
+            //注册监听函数
+            mLocationClient.registerLocationListener(myListener);
+
+
+            /**可选，是否需要地址信息，默认为不需要，即参数为false
+             如果开发者需要获得当前点的地址信息，此处必须为true**/
+            LocationClientOption option = new LocationClientOption();
+
+            option.setIsNeedAddress(true);
+
+            option.setOpenGps(true);
+
+            option.setAddrType("all");
+
+            option.setPriority(LocationClientOption.GpsFirst);
+
+            option.disableCache(false);
+
+            mLocationClient.setLocOption(option);
+
+            mLocationClient.start();
+
+            String cityCode = myListener.getCityCode();
+
+            Log.d("myWeatherl" , cityCode);
+
+            if(NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE)
+            {
+                Log.d("myWeather" , "网络OK");
+
+                //根据citycode查询天气状况
+                queryWeatherCode(cityCode);
+            }
+            else
+            {
+                //将上次成功获取并存储到sharedPreferences里的数据取出并解析，显示到页面上
+                String responseStr_last = sharedPreferences.getString("天气数据","");
+
+                TodayWeather todayWeather = parseXML(responseStr_last);
+
+                if(todayWeather != null)
+                {
+                    updateTodayWeahter(todayWeather);
+                }
+
+                Log.d("myWeather" , "网络挂了");
+
+                Toast.makeText(MainActivity.this , "网络挂了" , Toast.LENGTH_LONG).show();
+            }
+
         }
     //方法结束标记
     }
@@ -457,6 +575,7 @@ public class MainActivity extends Activity implements View.OnClickListener
                                 todayWeather.setQuality(xmlPullParser.getText());
 
                             }
+                            //未来6天天气情况数据是否获得由count控制
                             else if ( xmlPullParser.getName().equals("fengxiang") && fengxiangCount == 0 )
                             {
                                 eventType = xmlPullParser.next();

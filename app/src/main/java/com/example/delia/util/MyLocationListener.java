@@ -4,6 +4,12 @@ import android.util.Log;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
+import com.example.delia.app.MyApplication;
+import com.example.delia.bean.City;
+
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by delia on 13/11/2017.
@@ -11,7 +17,10 @@ import com.baidu.location.BDLocationListener;
 
 public class MyLocationListener implements BDLocationListener {
 
-    String city =null;
+    private List<City> cityList = new ArrayList<>();
+
+    private String cityCode = null;
+
     @Override
     public void onReceiveLocation(BDLocation location){
         //此处的BDLocation为定位结果信息类，通过它的各种get方法可获取定位相关的全部结果
@@ -21,21 +30,51 @@ public class MyLocationListener implements BDLocationListener {
         String addr = location.getAddrStr();    //获取详细地址信息
         String country = location.getCountry();    //获取国家
         String province = location.getProvince();    //获取省份
-        city = location.getCity();    //获取城市
+        String city = location.getCity();    //获取城市
         String district = location.getDistrict();    //获取区县
         String street = location.getStreet();    //获取街道信息
-
-        Log.d("myWeathers" , "city");
-//        Log.d("myWeather" , "district");
-//        Log.d("myWeather" , "addr");
 
         Log.d("myWeathers" , city.toString());
         Log.d("myWeathers" , district.toString());
         Log.d("myWeathers" , addr);
 
+        City locationCity = null;
+
+        MyApplication myApplication = MyApplication.getInstance();
+
+        cityList = myApplication.getCityList();
+
+        for(City citylocation : cityList)
+        {
+            if (city != null)
+            {
+                int index = citylocation.getCity().indexOf(city.toString().replace("市",""));
+
+                if(index != -1)
+                {
+                    locationCity = citylocation;
+                }
+            }
+
+//            if(district != null)
+//            {
+//                int index = citylocation.getCity().indexOf(district.toString().replace("区",""));
+//
+//                if(index != -1)
+//                {
+//                    locationCity = citylocation;
+//                }
+//            }
+
+        }
+
+        Log.d("myWeathers" , locationCity.getNumber());
+
+        cityCode = locationCity.getNumber();
     }
-    public String LocationInfo()
+
+    public String getCityCode()
     {
-        return city;
+        return cityCode;
     }
 }

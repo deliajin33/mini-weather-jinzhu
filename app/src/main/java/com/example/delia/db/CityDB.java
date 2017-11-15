@@ -47,12 +47,12 @@ public class CityDB
         }
         return list;
     }
-/**
+
     public City getACity(String cityName)
     {
         City item = null;
 
-        Cursor c = db.rawQuery("SELECT * from " + CITY_TABLE_NAME + "where ", null);
+        Cursor c = db.rawQuery("SELECT * from " + CITY_TABLE_NAME + "where city =" + cityName, null);
 
         while(c.moveToNext())
         {
@@ -66,5 +66,4 @@ public class CityDB
         }
         return item;
     }
- **/
 }
