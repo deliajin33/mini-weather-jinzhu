@@ -9,6 +9,7 @@ import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,8 @@ public class MainActivity extends Activity implements View.OnClickListener
 
     //各式各样的组件
     private ImageView mUpdateBtn;
+
+    private ProgressBar mProgressBar;
 
     private ImageView mCitySelect;
 
@@ -115,6 +118,13 @@ public class MainActivity extends Activity implements View.OnClickListener
 
         mUpdateBtn.setOnClickListener(this);
 
+        mProgressBar = (ProgressBar)findViewById(R.id.title_update_progress);
+
+        //选择城市按钮
+        mCitySelect = (ImageView)findViewById(R.id.title_city_manager);
+
+        mCitySelect.setOnClickListener(this);
+
         //检查网络连接情况
         if(NetUtil.getNetworkState(this) != NetUtil.NETWORN_NONE)
         {
@@ -130,10 +140,7 @@ public class MainActivity extends Activity implements View.OnClickListener
             Toast.makeText(MainActivity.this , "网络挂了" , Toast.LENGTH_LONG).show();
         }
 
-        //选择城市按钮
-        mCitySelect = (ImageView)findViewById(R.id.title_city_manager);
 
-        mCitySelect.setOnClickListener(this);
 
         //定位按钮
         mCityLocation = (ImageView)findViewById(R.id.title_location);
@@ -266,6 +273,10 @@ public class MainActivity extends Activity implements View.OnClickListener
         //更新按钮事件处理
         if(view.getId() == R.id.title_update_btn)
         {
+            mUpdateBtn.setVisibility(View.INVISIBLE);
+            //mProgressBar.setVisibility(View.VISIBLE);
+
+
             //SharedPreferences是Android平台上一个轻量级的存储类，用来保存应用的一些常用配置,文件生成为xml文件
             //SharedPreferences sharedPreferences = getSharedPreferences("config" , MODE_PRIVATE);
             String cityCode = sharedPreferences.getString("main_city_code" , "101010100");
@@ -277,6 +288,10 @@ public class MainActivity extends Activity implements View.OnClickListener
 
                 //根据citycode查询天气状况
                 queryWeatherCode(cityCode);
+
+//                mProgressBar.setVisibility(View.INVISIBLE);
+//                mUpdateBtn.setVisibility(View.VISIBLE);
+
             }
             else
             {
@@ -403,7 +418,8 @@ public class MainActivity extends Activity implements View.OnClickListener
         final String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + cityCode;
         Log.d("myWeather" , address);
 
-        //匿名类
+        //直接使用Thread类创建线程对象，并向构造方法Thread(Runnable target)的参数传递一个实现了该接口的实例，
+        //在这里都使用了匿名类,并实现了run()
         new Thread(new Runnable()
         {
             @Override
@@ -469,7 +485,7 @@ public class MainActivity extends Activity implements View.OnClickListener
             }
 
 
-        }).start();
+        }).start();//将该线程加入资源等待队列
     }
 
 
