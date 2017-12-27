@@ -3,7 +3,10 @@ package com.example.delia.miniweather;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.view.ViewPager;
@@ -35,6 +38,8 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -58,7 +63,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     private static final int UPDATE_FORECAST_WEATHER = 2;
 
     //各式各样的组件
-    private ImageView mUpdateBtn;
+    private ImageView mUpdateBtn, shareBtn;
 
     private View view1,view2;
 
@@ -138,14 +143,15 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         //为更新按钮添加事件,Activity自身为监听器
         mUpdateBtn = (ImageView)findViewById(R.id.title_update_btn);
-
         mUpdateBtn.setOnClickListener(this);
+
+        //为分享按钮添加事件,Activity自身为监听器
+        shareBtn = (ImageView)findViewById(R.id.title_share);
+        shareBtn.setOnClickListener(this);
 
         //为更新进度按钮添加事件,Activity自身为监听器
         mProgressBar = (ProgressBar)findViewById(R.id.title_update_progress);
-
         mProgressBar.setOnClickListener(this);
-
         mProgressBar.setVisibility(View.INVISIBLE);
 
         //选择城市按钮
@@ -223,6 +229,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         weatherImg = (ImageView) findViewById(R.id.weather_img);
         pmImg = (ImageView) findViewById(R.id.pm2_5_img);
+
 
         //初始化
         city_name_Tv.setText("N/A");
@@ -417,7 +424,48 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             }
 
         }
+
+        if(view.getId()==R.id.title_share)
+        {   //分享
+            String imgpath=screenshot();//截屏并获取截屏的保存路径
+            Intent intent = new Intent(Intent.ACTION_SEND); // 启动分享发送的属性
+            File file = new File(imgpath);//读取截屏
+            intent.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file));// 分享的内容
+            intent.setType("image/*");// 分享发送的数据类型
+            Intent chooser = Intent.createChooser(intent, "Share screen shot");
+            if(intent.resolveActivity(getPackageManager()) != null)
+            {
+                startActivity(chooser);//启动要分享到应用
+            }
+        }
     //方法结束标记
+    }
+
+    private String screenshot()
+    {//截屏并返回路径
+        // 获取屏幕
+        String imagePath="";
+        View dView = getWindow().getDecorView();
+        dView.setDrawingCacheEnabled(true);
+        dView.buildDrawingCache();
+        Bitmap bmp = dView.getDrawingCache();
+        if (bmp != null)
+        {
+            try {
+                // 获取内置SD卡路径
+                String sdCardPath = Environment.getExternalStorageDirectory().getPath();
+                // 图片文件路径
+                imagePath = sdCardPath + File.separator + "screenshot.png";
+                File file = new File(imagePath);
+                FileOutputStream os = new FileOutputStream(file);
+                bmp.compress(Bitmap.CompressFormat.PNG, 100, os);
+                os.flush();
+                os.close();
+            } catch (Exception e) {
+            }
+        }
+        return imagePath;
+        
     }
 
     /**startActivityForResult的主要作用就是它可以回传数据，假设我们有两个页面，

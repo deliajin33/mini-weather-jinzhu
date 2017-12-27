@@ -209,12 +209,6 @@ public class SelectCity extends Activity implements View.OnClickListener
             default:
                 break;
         }
-
-
-
     //方法结束标记
     }
-
-
-
 }
