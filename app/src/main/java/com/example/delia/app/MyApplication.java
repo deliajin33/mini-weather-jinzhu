@@ -157,4 +157,45 @@ public class MyApplication extends Application
         return new CityDB(this , path);
     }
 
+    private String weathertype;
+    private String wind;
+    private String todaydate;
+    private String wendu;
+
+    public String getWeathertype() {
+        return weathertype;
+    }
+
+    public void setWeathertype(String weathertype) {
+        this.weathertype = weathertype;
+    }
+
+    public String getWind() {
+        return wind;
+    }
+
+    public void setWind(String wind) {
+        this.wind = wind;
+    }
+
+    public String getTodaydate() {
+        return todaydate;
+    }
+
+    public void setTodaydate(String todaydate) {
+        this.todaydate = todaydate;
+    }
+
+    public String getWendu() {
+        return wendu;
+    }
+
+    public void setWendu(String wendu) {
+        this.wendu = wendu;
+    }
+
+
+
+
+
 }

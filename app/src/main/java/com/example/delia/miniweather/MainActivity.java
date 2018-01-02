@@ -57,7 +57,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
  */
 
 //一个Activity标识一个具有用户界面的单一屏幕(窗口)
-public class MainActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener
+public class MainActivity extends Activity implements View.OnClickListener, ViewPager.OnPageChangeListener, MyReceiver.Message
 {
     private static final int UPDATE_TODAY_WEATHER = 1;
     private static final int UPDATE_FORECAST_WEATHER = 2;
@@ -83,6 +83,8 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     public LocationClient mLocationClient = null;
 
     private MyLocationListener myListener = new MyLocationListener();
+
+    private MyApplication myApplication = null;
 
     //未来6天天气
     private ViewPager viewPager;
@@ -465,7 +467,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             }
         }
         return imagePath;
-        
+
     }
 
     /**startActivityForResult的主要作用就是它可以回传数据，假设我们有两个页面，
@@ -1073,6 +1075,13 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
         }
 
+
+        myApplication=MyApplication.getInstance();
+        myApplication.setTodaydate(todayWeather.getDate());
+        myApplication.setWeathertype(todayWeather.getType());
+        myApplication.setWendu(todayWeather.getWendu());
+        myApplication.setWind(todayWeather.getFengli());
+
         //更新天气图片
         if(todayWeather.getType() != null)
         {
@@ -1620,6 +1629,16 @@ public class MainActivity extends Activity implements View.OnClickListener, View
 
     @Override
     public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void getMsg(String str) {
+        mUpdateBtn.performClick();
+    }
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
 
     }
 }
