@@ -56,7 +56,7 @@
             <!-- <action android:name="android.intent.action.LAUNCHER" /> -->
             <!-- </intent-filter> -->
         </activity>
-
+        <service android:name="com.example.delia.service.MyService" />
         <receiver
             android:name=".MyReceiver"
             android:enabled="true"

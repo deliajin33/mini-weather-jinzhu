@@ -38,7 +38,7 @@ public class MyService extends Service
             public void run() {
 
                 // Toast.makeText(getApplicationContext(), "service is running", Toast.LENGTH_SHORT).show();
-                Intent i=new Intent("com.example.delia.miniweather.MyReceiver");
+                Intent i=new Intent("com.example.delia.miniweather.MYRECEIVER");
                 sendBroadcast(i);
                 // onDestroy();
             }

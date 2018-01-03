@@ -2,6 +2,7 @@ package com.example.delia.miniweather;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -63,6 +64,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
     private static final int UPDATE_FORECAST_WEATHER = 2;
 
     //各式各样的组件
+    private  MyReceiver myReceiver;
     private ImageView mUpdateBtn, shareBtn;
 
     private View view1,view2;
@@ -130,7 +132,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             }
         }
     };
-    
+
     @Override
     //Android 系统初始化它的程序是通过活动中的 onCreate() 回调的调用开始的,类似main()
 
@@ -210,6 +212,12 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         initView();
         initForecastView();
         initDots();
+
+        myReceiver=new MyReceiver();
+        IntentFilter intentFilter=new IntentFilter();
+        intentFilter.addAction("com.example.delia.miniweather.MYRECEIVER");
+        registerReceiver(myReceiver, intentFilter);
+        myReceiver.setMessage(this);
     }
 
 
@@ -245,7 +253,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         temperatureTv.setText("N/A");
         climateTv.setText("N/A");
         windTv.setText("N/A");
-    //方法结束标记
+        //方法结束标记
     }
 
     public void initForecastView()
@@ -440,7 +448,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
                 startActivity(chooser);//启动要分享到应用
             }
         }
-    //方法结束标记
+        //方法结束标记
     }
 
     private String screenshot()
@@ -527,21 +535,21 @@ public class MainActivity extends Activity implements View.OnClickListener, View
                 TodayWeather todayWeather = null;
 
                 try {
-                        URL url = new URL(address);
-                        con = (HttpURLConnection) url.openConnection();
+                    URL url = new URL(address);
+                    con = (HttpURLConnection) url.openConnection();
 
-                        con.setRequestMethod("GET");
-                        con.setConnectTimeout(8000);
-                        con.setReadTimeout(8000);
+                    con.setRequestMethod("GET");
+                    con.setConnectTimeout(8000);
+                    con.setReadTimeout(8000);
 
-                        InputStream in = con.getInputStream();
-                        BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-                        StringBuilder response = new StringBuilder();
+                    InputStream in = con.getInputStream();
+                    BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+                    StringBuilder response = new StringBuilder();
 
-                        String str;
-                        while ( (str = reader.readLine()) != null ) {
-                            response.append(str);
-                            Log.d("myWeather", str);
+                    String str;
+                    while ( (str = reader.readLine()) != null ) {
+                        response.append(str);
+                        Log.d("myWeather", str);
 
                     }
                     String responseStr = response.toString();
@@ -914,7 +922,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
             e.printStackTrace();
         }
         return todayWeather;
-    //方法结束标记
+        //方法结束标记
     }
 
     public List<TodayWeather> parseForecastXML(InputStream is)//获取未来四天天气的列表
@@ -1047,7 +1055,7 @@ public class MainActivity extends Activity implements View.OnClickListener, View
         {
             windTv.setText("风力：" + todayWeather.getFengli());
         }
-        
+
         //更新pm图片
         if(todayWeather.getPm25()!=null)
         {

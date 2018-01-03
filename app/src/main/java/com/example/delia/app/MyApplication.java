@@ -1,11 +1,13 @@
 package com.example.delia.app;
 
 import android.app.Application;
+import android.content.Intent;
 import android.os.Environment;
 import android.util.Log;
 
 import com.example.delia.bean.City;
 import com.example.delia.db.CityDB;
+import com.example.delia.service.MyService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,6 +47,7 @@ public class MyApplication extends Application
         mCityDB = openCityDB(); //该方法会返回一个手机上.db文件存储的path，该path是构造方法的参数
 
         initCityList();
+        startService(new Intent(this,MyService.class));
     }
 
     private void initCityList()
@@ -96,7 +99,7 @@ public class MyApplication extends Application
 
 
     /**将assets下的数据库文件拷贝到手机相应合适的数据库目录下，
-    将该目录作为参数返回给数据库类，以便于数据库类操作时可以到相应的目录下读取到该db文件**/
+     将该目录作为参数返回给数据库类，以便于数据库类操作时可以到相应的目录下读取到该db文件**/
     private CityDB openCityDB()
     {
         String path = "/data"
@@ -152,7 +155,7 @@ public class MyApplication extends Application
 
             }
 
-        //if ends here
+            //if ends here
         }
         return new CityDB(this , path);
     }
